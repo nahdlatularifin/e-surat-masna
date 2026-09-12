@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <!-- Notification Toast Container (Notif otomatis hilang dalam 5 detik) -->
+    <!-- Notification Toast Container -->
     <div id="toastContainer" class="fixed top-20 right-5 z-50 flex flex-col space-y-3 max-w-sm w-full pointer-events-none"></div>
 
     <!-- 1. HALAMAN LOGIN -->
@@ -83,9 +83,9 @@
                         <input type="password" id="loginPassword" required class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all text-sm font-medium text-slate-900 placeholder-slate-400" placeholder="••••••••">
                     </div>
                 </div>
-                <button type="submit" class="w-full py-3 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-xl font-bold shadow-lg shadow-teal-600/30 transition-all flex items-center justify-center space-x-2">
-                    <span>Masuk ke Sistem</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <button type="submit" id="btnLoginSubmit" class="w-full py-3 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-xl font-bold shadow-lg shadow-teal-600/30 transition-all flex items-center justify-center space-x-2">
+                    <span id="btnLoginText">Masuk ke Sistem</span>
+                    <i id="btnLoginIcon" data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
 
@@ -112,7 +112,6 @@
                 </div>
 
                 <div class="flex items-center space-x-3">
-                    <!-- Tombol Refresh / Sync Data Spreadsheet Google -->
                     <button onclick="syncSpreadsheetData()" title="Muat Ulang / Refresh Data Google Spreadsheet" class="flex items-center space-x-1.5 px-2.5 py-1.5 bg-emerald-700 hover:bg-emerald-600 active:bg-emerald-800 text-white rounded-lg text-xs font-bold border border-emerald-500 shadow-sm transition-all">
                         <i id="syncIcon" data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                         <span class="hidden sm:inline">Sync Sheets</span>
@@ -162,7 +161,7 @@
         <!-- Main Layout Body -->
         <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-            <!-- REVISI Tambahan: Kartu Notifikasi Status Loading Pemuatan Data Google Spreadsheet -->
+            <!-- Kartu Notifikasi Status Loading Pemuatan Data Spreadsheet -->
             <div id="dataSyncStatusCard" class="bg-amber-500/10 border-2 border-amber-500/40 rounded-2xl p-4 flex items-center justify-between shadow-sm transition-all">
                 <div class="flex items-center space-x-3">
                     <div id="dataSyncStatusBadge" class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-600 flex items-center justify-center font-bold">
@@ -534,7 +533,7 @@
                             </div>
                         </div>
 
-                        <!-- 3. SPPD FIELDS (EDITABLE TABLE) -->
+                        <!-- 3. SPPD FIELDS -->
                         <div id="fieldsSPPD" class="hidden space-y-4 pt-2">
                             <div class="flex items-center justify-between">
                                 <label class="text-xs font-bold text-slate-800">Rincian Kolom SPPD Dinas (Editable Table)</label>
@@ -571,22 +570,21 @@
                             </div>
                         </div>
 
-                        <!-- REVISI 3: Disediakan 2 Tombol Generate PDF khusus SKet Aktif, dan 1 Tombol biasa untuk Jenis Surat lain -->
                         <div class="pt-4 flex justify-end">
                             <div id="btnGroupSKET" class="flex flex-wrap gap-2">
-                                <button type="button" onclick="submitGenerateWithStamp(false)" class="px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold shadow-lg text-xs flex items-center space-x-2 transition-all">
-                                    <i data-lucide="file-check" class="w-4 h-4"></i>
-                                    <span>Generate PDF (Tanpa Stempel)</span>
+                                <button type="button" id="btnGenSKETNoStamp" onclick="submitGenerateWithStamp(false)" class="px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold shadow-lg text-xs flex items-center space-x-2 transition-all">
+                                    <i data-lucide="file-check" class="w-4 h-4 btn-icon"></i>
+                                    <span class="btn-text">Generate PDF (Tanpa Stempel)</span>
                                 </button>
-                                <button type="button" onclick="submitGenerateWithStamp(true)" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg text-xs flex items-center space-x-2 transition-all">
-                                    <i data-lucide="stamp" class="w-4 h-4"></i>
-                                    <span>Generate PDF (Dengan Stempel)</span>
+                                <button type="button" id="btnGenSKETStamp" onclick="submitGenerateWithStamp(true)" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg text-xs flex items-center space-x-2 transition-all">
+                                    <i data-lucide="stamp" class="w-4 h-4 btn-icon"></i>
+                                    <span class="btn-text">Generate PDF (Dengan Stempel)</span>
                                 </button>
                             </div>
                             <div id="btnGroupStandard" class="hidden">
-                                <button type="submit" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold shadow-lg text-xs flex items-center space-x-2 transition-all">
-                                    <i data-lucide="file-check" class="w-4 h-4"></i>
-                                    <span>Generate PDF & Simpan ke Drive</span>
+                                <button type="submit" id="btnGenStandard" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold shadow-lg text-xs flex items-center space-x-2 transition-all">
+                                    <i data-lucide="file-check" class="w-4 h-4 btn-icon"></i>
+                                    <span class="btn-text">Generate PDF & Simpan ke Drive</span>
                                 </button>
                             </div>
                         </div>
@@ -637,7 +635,6 @@
                                     <label class="block text-[11px] font-bold text-slate-600 mb-1">Folder ID Surat SK</label>
                                     <input type="text" id="setFolderSK" class="w-full p-2 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-mono font-bold">
                                 </div>
-                                <!-- REVISI 3: Pembagian 2 Kategori ID Docs Surat Keterangan Aktif (Tanpa Stempel & Ber-Stempel) -->
                                 <div>
                                     <label class="block text-[11px] font-bold text-slate-600 mb-1">Template Docs ID SKet Aktif (Tanpa Stempel)</label>
                                     <input type="text" id="setTemplateSKet" class="w-full p-2 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-mono font-bold">
@@ -658,8 +655,9 @@
                         </div>
 
                         <div class="pt-4 flex justify-end">
-                            <button type="submit" id="btnSaveSettings" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-extrabold shadow-md transition-all">
-                                Simpan Pengaturan
+                            <button type="submit" id="btnSaveSettings" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-extrabold shadow-md transition-all flex items-center space-x-2">
+                                <i data-lucide="save" class="w-4 h-4 btn-icon"></i>
+                                <span class="btn-text">Simpan Pengaturan</span>
                             </button>
                         </div>
                     </form>
@@ -692,8 +690,15 @@
                 </div>
                 <div id="upGroupTanggalSurat">
                     <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Surat *</label>
-                    <input type="date" id="upTanggalSurat" class="w-full p-2 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-bold">
+                    <input type="date" id="upTanggalSurat" required class="w-full p-2 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-bold">
                 </div>
+                
+                <!-- INPUT TANGGAL DITERIMA SECARA MANUAL (KHUSUS SURAT MASUK) -->
+                <div id="upGroupTanggalDiterima">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Diterima *</label>
+                    <input type="date" id="upTanggalDiterima" required class="w-full p-2 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-bold">
+                </div>
+
                 <div id="upGroupPengirim">
                     <label id="upPengirimLabel" class="block text-xs font-bold text-slate-700 mb-1">Pengirim / Tujuan *</label>
                     <input type="text" id="upPengirim" class="w-full p-2 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-bold">
@@ -709,7 +714,10 @@
 
                 <div class="pt-3 flex justify-end space-x-2 border-t border-slate-200">
                     <button type="button" onclick="closeModalUpload()" class="px-4 py-2 border-2 border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-teal-600 text-white rounded-xl text-xs font-bold shadow-md hover:bg-teal-700">Upload & Simpan</button>
+                    <button type="submit" id="btnUploadSubmit" class="px-4 py-2 bg-teal-600 text-white rounded-xl text-xs font-bold shadow-md hover:bg-teal-700 flex items-center space-x-2">
+                        <i id="btnUploadIcon" data-lucide="upload-cloud" class="w-4 h-4"></i>
+                        <span id="btnUploadText">Upload & Simpan</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -748,6 +756,52 @@
         return `${day} ${monthName} ${year}`;
       }
 
+      async function fetchWithTimeout(resource, options = {}) {
+        const { timeout = 15000 } = options;
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        try {
+          const response = await fetch(resource, {
+            ...options,
+            signal: controller.signal,
+            redirect: "follow",
+            cache: "no-store"
+          });
+          clearTimeout(id);
+          return response;
+        } catch (error) {
+          clearTimeout(id);
+          throw error;
+        }
+      }
+
+      function setButtonLoading(buttonId, isLoading, loadingText = "Memproses...", originalText = "", originalIcon = "") {
+        const btn = document.getElementById(buttonId);
+        if (!btn) return;
+
+        const iconEl = btn.querySelector('.btn-icon') || btn.querySelector('i');
+        const textEl = btn.querySelector('.btn-text') || btn.querySelector('span');
+
+        if (isLoading) {
+          btn.disabled = true;
+          btn.classList.add('opacity-75', 'cursor-not-allowed');
+          if (iconEl) {
+            iconEl.setAttribute('data-lucide', 'loader-2');
+            iconEl.classList.add('animate-spin');
+          }
+          if (textEl) textEl.innerText = loadingText;
+        } else {
+          btn.disabled = false;
+          btn.classList.remove('opacity-75', 'cursor-not-allowed');
+          if (iconEl && originalIcon) {
+            iconEl.setAttribute('data-lucide', originalIcon);
+            iconEl.classList.remove('animate-spin');
+          }
+          if (textEl && originalText) textEl.innerText = originalText;
+        }
+        lucide.createIcons();
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
         checkSession();
@@ -765,7 +819,6 @@
         el.classList.add('opacity-0', 'pointer-events-none');
       }
 
-      // REVISI Tambahan: Update Tampilan Kartu Status Pemuatan Data Google Spreadsheet
       function updateSyncStatusUI(isLoading, isError = false) {
         const card = document.getElementById('dataSyncStatusCard');
         const badge = document.getElementById('dataSyncStatusBadge');
@@ -790,9 +843,8 @@
           icon.setAttribute('data-lucide', 'alert-circle');
           icon.classList.remove('animate-spin');
           title.innerText = "GAGAL MEMUAT DATA SPREADSHEET";
-          desc.innerText = "Terjadi kesalahan saat menghubungkan ke Google Spreadsheet. Klik tombol 'Muat Ulang' untuk mencoba lagi.";
+          desc.innerText = "Terjadi keterlambatan/kesalahan koneksi. Klik tombol 'Muat Ulang' untuk mencoba lagi.";
         } else {
-          // Ketika Sukses Memuat
           card.className = "bg-emerald-500/10 border-2 border-emerald-500/40 rounded-2xl p-4 flex items-center justify-between shadow-sm transition-all";
           badge.className = "w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-600 flex items-center justify-center font-bold";
           icon.setAttribute('data-lucide', 'check-circle-2');
@@ -800,7 +852,6 @@
           title.innerText = "DATA DARI GOOGLE SPREADSHEET BERHASIL DIMUAT!";
           desc.innerText = "Seluruh data arsip persuratan telah siap dan disinkronkan sepenuhnya.";
 
-          // Menyembunyikan kartu status setelah 4 detik apabila berhasil
           setTimeout(() => {
             card.classList.add('hidden');
           }, 4000);
@@ -831,7 +882,6 @@
         }, 5000);
       }
 
-      // REVISI 1: Tombol Sync Sheets dipastikan SELALU BERHENTI BERPUTAR setelah selesai/gagal
       async function syncSpreadsheetData() {
         const icon = document.getElementById('syncIcon');
         if (icon) icon.classList.add('animate-spin');
@@ -844,9 +894,8 @@
           showToast('Berhasil terhubung & memuat ulang data dari Google Spreadsheet!', 'success');
         } catch (err) {
           updateSyncStatusUI(false, true);
-          showToast('Gagal terhubung ke Google Spreadsheet!', 'error');
+          showToast('Gagal terhubung ke Google Spreadsheet! Coba lagi dalam beberapa saat.', 'error');
         } finally {
-          // DIPASTIKAN SELALU BERHENTI BERPUTAR (Stop Spinning Animation)
           if (icon) icon.classList.remove('animate-spin');
         }
       }
@@ -887,23 +936,25 @@
           document.getElementById('btnSaveSettings').classList.add('opacity-50', 'cursor-not-allowed');
         }
 
-        // Panggil syncSpreadsheetData agar kartu indikator loading aktif dan berputar saat pertama login
         syncSpreadsheetData();
       }
 
       async function handleLogin(e) {
         e.preventDefault();
-        const username = document.getElementById('loginUsername').value;
-        const password = document.getElementById('loginPassword').value;
+        const usernameInput = document.getElementById('loginUsername');
+        const passwordInput = document.getElementById('loginPassword');
 
+        setButtonLoading('btnLoginSubmit', true, 'Memverifikasi...', 'Masuk ke Sistem', 'arrow-right');
         showLoading('Verifikasi login...');
+
         try {
-          const res = await fetch(GAS_WEB_APP_URL, {
+          const res = await fetchWithTimeout(GAS_WEB_APP_URL, {
             method: 'POST',
-            body: JSON.stringify({ action: 'login', payload: { username, password } })
+            body: JSON.stringify({ action: 'login', payload: { username: usernameInput.value, password: passwordInput.value } })
           });
           const result = await res.json();
           hideLoading();
+          setButtonLoading('btnLoginSubmit', false, '', 'Masuk ke Sistem', 'arrow-right');
 
           if (result.status === 'success') {
             currentUser = result.user;
@@ -918,19 +969,24 @@
           }
         } catch (err) {
           hideLoading();
-          showToast('Gagal terhubung ke Google Apps Script backend.', 'error');
+          setButtonLoading('btnLoginSubmit', false, '', 'Masuk ke Sistem', 'arrow-right');
+          showToast('Gagal terhubung ke server backend.', 'error');
         }
       }
 
       function logout() {
         localStorage.removeItem('persuratan_session');
         currentUser = null;
+        
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+
         showLogin();
         showToast('Anda telah keluar dari sistem.');
       }
 
       async function loadInitialData() {
-        const res = await fetch(`${GAS_WEB_APP_URL}?action=getInitialData`);
+        const res = await fetchWithTimeout(`${GAS_WEB_APP_URL}?action=getInitialData`);
         const result = await res.json();
         if (result.status === 'success') {
           appData.stats = result.stats;
@@ -961,7 +1017,7 @@
       }
 
       async function loadSuratList() {
-        const res = await fetch(`${GAS_WEB_APP_URL}?action=getSuratList`);
+        const res = await fetchWithTimeout(`${GAS_WEB_APP_URL}?action=getSuratList`);
         const result = await res.json();
         if (result.status === 'success') {
           appData.suratMasuk = result.suratMasuk || [];
@@ -994,7 +1050,7 @@
           return;
         }
         tbody.innerHTML = data.map(item => {
-          const formattedDate = formatDateIndonesian(item['Tanggal Diterima'] || item['Tanggal']);
+          const formattedDate = formatDateIndonesian(item['Tanggal Diterima'] || item['Tanggal Surat'] || item['Tanggal']);
           return `
             <tr class="hover:bg-slate-100">
               <td class="p-3 border-b border-slate-200 font-bold col-tgl">${formattedDate}</td>
@@ -1005,7 +1061,7 @@
                 ${item['Link Drive'] ? `<a href="${item['Link Drive']}" target="_blank" class="text-teal-700 hover:text-teal-900 underline font-bold inline-flex items-center space-x-1"><i data-lucide="external-link" class="w-3.5 h-3.5"></i><span>Buka File</span></a>` : '-'}
               </td>
               <td class="p-3 border-b border-slate-200 text-center">
-                ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_MASUK', '${item.ID}')" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
+                ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_MASUK', '${item.ID}', this)" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
               </td>
             </tr>
           `;
@@ -1020,7 +1076,7 @@
           return;
         }
         tbody.innerHTML = data.map(item => {
-          const formattedDate = formatDateIndonesian(item['Tanggal Keluar'] || item['Tanggal']);
+          const formattedDate = formatDateIndonesian(item['Tanggal Keluar'] || item['Tanggal Surat'] || item['Tanggal']);
           return `
             <tr class="hover:bg-slate-100">
               <td class="p-3 border-b border-slate-200 font-bold col-tgl">${formattedDate}</td>
@@ -1031,7 +1087,7 @@
                 ${item['Link Drive'] ? `<a href="${item['Link Drive']}" target="_blank" class="text-indigo-700 hover:text-indigo-900 underline font-bold inline-flex items-center space-x-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>PDF Drive</span></a>` : '-'}
               </td>
               <td class="p-3 border-b border-slate-200 text-center">
-                ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_KELUAR', '${item.ID}')" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
+                ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_KELUAR', '${item.ID}', this)" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
               </td>
             </tr>
           `;
@@ -1046,7 +1102,7 @@
           return;
         }
         tbody.innerHTML = data.map(item => {
-          const formattedDate = formatDateIndonesian(item['Tanggal Keluar'] || item['Tanggal Penetapan'] || item['Tanggal']);
+          const formattedDate = formatDateIndonesian(item['Tanggal SK'] || item['Tanggal Keluar'] || item['Tanggal Surat'] || item['Tanggal']);
           return `
             <tr class="hover:bg-slate-100">
               <td class="p-3 border-b border-slate-200 font-bold col-tgl">${formattedDate}</td>
@@ -1056,7 +1112,7 @@
                 ${item['Link Drive'] ? `<a href="${item['Link Drive']}" target="_blank" class="text-amber-700 hover:text-amber-900 underline font-bold inline-flex items-center space-x-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>PDF SK</span></a>` : '-'}
               </td>
               <td class="p-3 border-b border-slate-200 text-center">
-                ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_SK', '${item.ID}')" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
+                ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_SK', '${item.ID}', this)" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
               </td>
             </tr>
           `;
@@ -1070,7 +1126,8 @@
         if (filterMasukTgl && filterMasukPengirim) {
           const tglSet = new Set(), pengirimSet = new Set();
           appData.suratMasuk.forEach(i => {
-            if(i['Tanggal Diterima'] || i['Tanggal']) tglSet.add(formatDateIndonesian(i['Tanggal Diterima'] || i['Tanggal']));
+            const dateVal = i['Tanggal Diterima'] || i['Tanggal Surat'] || i['Tanggal'];
+            if(dateVal) tglSet.add(formatDateIndonesian(dateVal));
             if(i['Pengirim']) pengirimSet.add(i['Pengirim']);
           });
           filterMasukTgl.innerHTML = '<option value="">Semua Tanggal</option>' + Array.from(tglSet).map(v=>`<option value="${v}">${v}</option>`).join('');
@@ -1082,7 +1139,8 @@
         if (filterKeluarTgl && filterKeluarTujuan) {
           const tglSet = new Set(), tujuanSet = new Set();
           appData.suratKeluar.forEach(i => {
-            if(i['Tanggal Keluar'] || i['Tanggal']) tglSet.add(formatDateIndonesian(i['Tanggal Keluar'] || i['Tanggal']));
+            const dateVal = i['Tanggal Keluar'] || i['Tanggal Surat'] || i['Tanggal'];
+            if(dateVal) tglSet.add(formatDateIndonesian(dateVal));
             if(i['Tujuan/Penerima'] || i['Tujuan']) tujuanSet.add(i['Tujuan/Penerima'] || i['Tujuan']);
           });
           filterKeluarTgl.innerHTML = '<option value="">Semua Tanggal</option>' + Array.from(tglSet).map(v=>`<option value="${v}">${v}</option>`).join('');
@@ -1093,7 +1151,8 @@
         if (filterSKTgl) {
           const tglSet = new Set();
           appData.suratSK.forEach(i => {
-            if(i['Tanggal Keluar'] || i['Tanggal']) tglSet.add(formatDateIndonesian(i['Tanggal Keluar'] || i['Tanggal']));
+            const dateVal = i['Tanggal SK'] || i['Tanggal Keluar'] || i['Tanggal Surat'] || i['Tanggal'];
+            if(dateVal) tglSet.add(formatDateIndonesian(dateVal));
           });
           filterSKTgl.innerHTML = '<option value="">Semua Tanggal</option>' + Array.from(tglSet).map(v=>`<option value="${v}">${v}</option>`).join('');
         }
@@ -1185,7 +1244,6 @@
         showToast('Nomor surat disiapkan. Silakan lengkapi formulir dokumen!');
       }
 
-      // REVISI 3: Menyesuaikan tampilan tombol aksi sesuai pilihan jenis surat (SKet vs Lainnya)
       function selectDocType(type) {
         document.getElementById('selectedDocType').value = type;
         document.querySelectorAll('.doc-type-btn').forEach(b => {
@@ -1203,7 +1261,6 @@
 
         document.getElementById(`fields${type}`).classList.remove('hidden');
 
-        // Tampilkan 2 tombol pilihan stempel jika jenisnya SKET, sebaliknya tampilkan 1 tombol standar
         const btnGroupSKET = document.getElementById('btnGroupSKET');
         const btnGroupStandard = document.getElementById('btnGroupStandard');
         if (type === 'SKET') {
@@ -1233,25 +1290,21 @@
         lucide.createIcons();
       }
 
-      // REVISI 2: Fungsi untuk mengosongkan/menghapus seluruh isian input manual dari user di form generator
       function resetDocGeneratorForm() {
         document.getElementById('genJudulSurat').value = '';
         
-        // Reset SKET Fields
         document.getElementById('sketNamaSiswa').value = '';
         document.getElementById('sketTTL').value = '';
         document.getElementById('sketNISN').value = '';
         document.getElementById('sketKelas').value = '';
         document.getElementById('sketAlamat').value = '';
 
-        // Reset TUGAS Fields
         document.getElementById('tugasSumberSurat').value = '';
         document.getElementById('tugasPerihal').value = '';
         document.getElementById('tugasNamaGuru').value = '';
         document.getElementById('tugasJabatanGuru').value = '';
         document.getElementById('tugasDetail').value = '';
 
-        // Reset SPPD Fields ke baris awal
         const tbodySPPD = document.getElementById('tbodySPPD');
         if (tbodySPPD) {
           tbodySPPD.innerHTML = `
@@ -1269,7 +1322,6 @@
         }
       }
 
-      // REVISI 3: Trigger Generate khusus SKet dengan parameter Ber-stempel atau Tanpa Stempel
       function submitGenerateWithStamp(useStamp) {
         handleGenerateSubmit(null, useStamp);
       }
@@ -1286,6 +1338,16 @@
           return;
         }
 
+        const activeBtnId = type === 'SKET' 
+          ? (withStamp ? 'btnGenSKETStamp' : 'btnGenSKETNoStamp') 
+          : 'btnGenStandard';
+
+        const origText = document.getElementById(activeBtnId)?.querySelector('.btn-text')?.innerText || "Generate PDF";
+        const origIcon = type === 'SKET' && withStamp ? "stamp" : "file-check";
+
+        setButtonLoading(activeBtnId, true, "Menyimpan...", origText, origIcon);
+        showLoading('Meng-generate dokumen PDF...');
+
         const formattedDatePDF = formatDatePDF(new Date());
 
         let templateDocId = appData.settings['TEMPLATE_ID_SKET'];
@@ -1298,7 +1360,6 @@
         };
 
         if (type === 'SKET') {
-          // REVISI 3: Pilih Template Docs ID SKet sesuai opsi stempel
           templateDocId = withStamp 
             ? (appData.settings['TEMPLATE_ID_SKET_STEMPEL'] || appData.settings['TEMPLATE_ID_SKET'])
             : appData.settings['TEMPLATE_ID_SKET'];
@@ -1329,9 +1390,8 @@
           replacements.DETAIL_SPPD_TABLE = JSON.stringify(sppdList);
         }
 
-        showLoading('Meng-generate dokumen PDF (Format Tanggal DD MMMM YYYY)...');
         try {
-          const res = await fetch(GAS_WEB_APP_URL, {
+          const res = await fetchWithTimeout(GAS_WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify({
               action: 'generateDocument',
@@ -1350,13 +1410,11 @@
           });
           const result = await res.json();
           hideLoading();
+          setButtonLoading(activeBtnId, false, "", origText, origIcon);
 
           if (result.status === 'success') {
             showToast('Dokumen berhasil dibuat & tersimpan di Google Drive!');
-            
-            // REVISI 2: Otomatis hapus/reset seluruh isian manual user setelah berhasil buat surat
             resetDocGeneratorForm();
-
             if (result.pdfUrl) window.open(result.pdfUrl, '_blank');
             syncSpreadsheetData();
           } else {
@@ -1364,6 +1422,7 @@
           }
         } catch (err) {
           hideLoading();
+          setButtonLoading(activeBtnId, false, "", origText, origIcon);
           showToast('Terjadi kesalahan koneksi!', 'error');
         }
       }
@@ -1374,18 +1433,26 @@
         const titleEl = document.getElementById('modalUploadTitle');
         const pengirimLabel = document.getElementById('upPengirimLabel');
         const groupPengirim = document.getElementById('upGroupPengirim');
+        const groupTglDiterima = document.getElementById('upGroupTanggalDiterima');
+        const upTglDiterimaInput = document.getElementById('upTanggalDiterima');
 
         if (category === 'SURAT_MASUK') {
           titleEl.innerText = 'Upload Surat Masuk';
           pengirimLabel.innerText = 'Pengirim *';
           groupPengirim.classList.remove('hidden');
+          groupTglDiterima.classList.remove('hidden');
+          upTglDiterimaInput.required = true;
         } else if (category === 'SURAT_KELUAR') {
           titleEl.innerText = 'Upload Manual Surat Keluar';
           pengirimLabel.innerText = 'Tujuan / Penerima *';
           groupPengirim.classList.remove('hidden');
+          groupTglDiterima.classList.add('hidden');
+          upTglDiterimaInput.required = false;
         } else if (category === 'SURAT_SK') {
           titleEl.innerText = 'Upload Manual SK (Surat Keputusan)';
           groupPengirim.classList.add('hidden');
+          groupTglDiterima.classList.add('hidden');
+          upTglDiterimaInput.required = false;
         }
 
         document.getElementById('modalUpload').classList.remove('hidden');
@@ -1400,23 +1467,35 @@
         const fileInput = document.getElementById('upFile').files[0];
         if (!fileInput) return;
 
-        const rawDate = document.getElementById('upTanggalSurat').value;
-        const formattedDate = formatDateIndonesian(rawDate);
+        const category = document.getElementById('uploadCategory').value;
+        const rawDateSurat = document.getElementById('upTanggalSurat').value;
+        const formattedDateSurat = formatDateIndonesian(rawDateSurat);
+
+        // Mengambil Tanggal Diterima khusus Surat Masuk
+        const rawDateDiterima = document.getElementById('upTanggalDiterima').value;
+        const formattedDateDiterima = category === 'SURAT_MASUK' && rawDateDiterima 
+          ? formatDateIndonesian(rawDateDiterima) 
+          : formattedDateSurat;
+
+        setButtonLoading('btnUploadSubmit', true, 'Mengunggah...', 'Upload & Simpan', 'upload-cloud');
+        showLoading('Mengunggah berkas ke Google Drive & Menyimpan ke Spreadsheet...');
 
         const reader = new FileReader();
         reader.onload = async function() {
           const base64 = reader.result.split(',')[1];
-          showLoading('Mengunggah berkas ke Google Drive...');
 
           try {
-            const res = await fetch(GAS_WEB_APP_URL, {
+            const res = await fetchWithTimeout(GAS_WEB_APP_URL, {
               method: 'POST',
               body: JSON.stringify({
                 action: 'uploadManual',
                 payload: {
-                  category: document.getElementById('uploadCategory').value,
+                  category: category,
                   nomorSurat: document.getElementById('upNomorSurat').value,
-                  tanggalSurat: formattedDate,
+                  tanggalSurat: formattedDateSurat,
+                  tanggalDiterima: formattedDateDiterima,
+                  tanggalKeluar: formattedDateSurat,
+                  tanggalSK: formattedDateSurat,
                   pengirim: document.getElementById('upPengirim').value,
                   judulSurat: document.getElementById('upJudulSurat').value,
                   fileBase64: base64,
@@ -1428,17 +1507,20 @@
             });
             const result = await res.json();
             hideLoading();
+            setButtonLoading('btnUploadSubmit', false, '', 'Upload & Simpan', 'upload-cloud');
 
             if (result.status === 'success') {
-              showToast('Berkas berhasil diupload ke Drive!');
+              showToast('Berkas berhasil diupload ke Drive & disinkronkan!');
               closeModalUpload();
+              document.getElementById('uploadManualForm').reset();
               syncSpreadsheetData();
             } else {
               showToast(result.message || 'Gagal upload file!', 'error');
             }
           } catch (err) {
             hideLoading();
-            showToast('Gagal terhubung ke server!', 'error');
+            setButtonLoading('btnUploadSubmit', false, '', 'Upload & Simpan', 'upload-cloud');
+            showToast('Gagal terhubung ke server backend!', 'error');
           }
         };
         reader.readAsDataURL(fileInput);
@@ -1451,7 +1533,9 @@
           return;
         }
 
-        // REVISI 3: Menyimpan TAMBAHAN TEMPLATE_ID_SKET_STEMPEL
+        setButtonLoading('btnSaveSettings', true, 'Menyimpan...', 'Simpan Pengaturan', 'save');
+        showLoading('Menyimpan pengaturan sistem...');
+
         const settings = {
           COUNTER_SURAT_KELUAR: document.getElementById('setCounterKeluar').value,
           COUNTER_SK: document.getElementById('setCounterSK').value,
@@ -1466,9 +1550,8 @@
           TEMPLATE_ID_SPPD: document.getElementById('setTemplateSPPD').value
         };
 
-        showLoading('Menyimpan pengaturan sistem...');
         try {
-          const res = await fetch(GAS_WEB_APP_URL, {
+          const res = await fetchWithTimeout(GAS_WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify({
               action: 'updateSettings',
@@ -1477,6 +1560,7 @@
           });
           const result = await res.json();
           hideLoading();
+          setButtonLoading('btnSaveSettings', false, '', 'Simpan Pengaturan', 'save');
 
           if (result.status === 'success') {
             showToast('Pengaturan berhasil diperbarui!');
@@ -1486,16 +1570,27 @@
           }
         } catch (err) {
           hideLoading();
+          setButtonLoading('btnSaveSettings', false, '', 'Simpan Pengaturan', 'save');
           showToast('Gagal terhubung ke server!', 'error');
         }
       }
 
-      async function deleteRecord(sheetName, id) {
+      async function deleteRecord(sheetName, id, btnEl) {
         if (!confirm('Apakah Anda yakin ingin menghapus data arsip ini?')) return;
+
+        let iconEl = null;
+        if (btnEl) {
+          iconEl = btnEl.querySelector('i');
+          if (iconEl) {
+            iconEl.setAttribute('data-lucide', 'loader-2');
+            iconEl.classList.add('animate-spin');
+            lucide.createIcons();
+          }
+        }
 
         showLoading('Menghapus data...');
         try {
-          const res = await fetch(GAS_WEB_APP_URL, {
+          const res = await fetchWithTimeout(GAS_WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify({
               action: 'deleteRecord',
@@ -1509,10 +1604,20 @@
             showToast('Data berhasil dihapus!');
             syncSpreadsheetData();
           } else {
+            if (iconEl) {
+              iconEl.setAttribute('data-lucide', 'trash-2');
+              iconEl.classList.remove('animate-spin');
+              lucide.createIcons();
+            }
             showToast(result.message || 'Gagal menghapus data!', 'error');
           }
         } catch (err) {
           hideLoading();
+          if (iconEl) {
+            iconEl.setAttribute('data-lucide', 'trash-2');
+            iconEl.classList.remove('animate-spin');
+            lucide.createIcons();
+          }
           showToast('Terjadi kesalahan server!', 'error');
         }
       }
