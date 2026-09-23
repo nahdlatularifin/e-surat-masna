@@ -507,7 +507,7 @@
                             </div>
                         </div>
 
-                        <!-- 2. TUGAS FIELDS -->
+                        <!-- 2. TUGAS FIELDS (REVISI) -->
                         <div id="fieldsTUGAS" class="hidden space-y-4 pt-2">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
@@ -519,6 +519,10 @@
                                     <input type="text" id="tugasPerihal" placeholder="Perihal Tugas" class="w-full p-2.5 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-semibold">
                                 </div>
                                 <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Nomor Surat (Sumber)</label>
+                                    <input type="text" id="tugasNomorSuratSumber" placeholder="Masukkan Nomor Surat (Sumber)" class="w-full p-2.5 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-semibold">
+                                </div>
+                                <div>
                                     <label class="block text-[11px] font-bold text-slate-600 mb-1">Nama Guru / Pegawai</label>
                                     <input type="text" id="tugasNamaGuru" placeholder="Nama Guru / Pegawai Ditugaskan" class="w-full p-2.5 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-semibold">
                                 </div>
@@ -526,10 +530,14 @@
                                     <label class="block text-[11px] font-bold text-slate-600 mb-1">Jabatan Guru</label>
                                     <input type="text" id="tugasJabatanGuru" placeholder="Jabatan Guru" class="w-full p-2.5 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-semibold">
                                 </div>
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-bold text-slate-600 mb-1">Detail Tugas</label>
-                                <textarea id="tugasDetail" placeholder="Detail Instansi / Tugas yang diberikan" class="w-full p-2.5 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-semibold h-20"></textarea>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Hari/Tanggal Penugasan</label>
+                                    <input type="text" id="tugasHariTanggal" placeholder="Misal: Senin, 12 Mei 2026" class="w-full p-2.5 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-semibold">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Tempat Penugasan</label>
+                                    <input type="text" id="tugasTempat" placeholder="Misal: Aula Kantor Kemenag Kabupaten" class="w-full p-2.5 rounded-xl border-2 border-slate-300 bg-slate-50 text-xs font-semibold">
+                                </div>
                             </div>
                         </div>
 
@@ -1301,9 +1309,11 @@
 
         document.getElementById('tugasSumberSurat').value = '';
         document.getElementById('tugasPerihal').value = '';
+        document.getElementById('tugasNomorSuratSumber').value = '';
         document.getElementById('tugasNamaGuru').value = '';
         document.getElementById('tugasJabatanGuru').value = '';
-        document.getElementById('tugasDetail').value = '';
+        document.getElementById('tugasHariTanggal').value = '';
+        document.getElementById('tugasTempat').value = '';
 
         const tbodySPPD = document.getElementById('tbodySPPD');
         if (tbodySPPD) {
@@ -1373,9 +1383,11 @@
           templateDocId = appData.settings['TEMPLATE_ID_TUGAS'];
           replacements.SUMBER_SURAT = document.getElementById('tugasSumberSurat').value;
           replacements.PERIHAL = document.getElementById('tugasPerihal').value;
+          replacements.NOMOR_SURAT_SUMBER = document.getElementById('tugasNomorSuratSumber').value;
           replacements.NAMA_GURU = document.getElementById('tugasNamaGuru').value;
           replacements.JABATAN_GURU = document.getElementById('tugasJabatanGuru').value;
-          replacements.DETAIL_TUGAS = document.getElementById('tugasDetail').value;
+          replacements.HARI_TANGGAL_PENUGASAN = document.getElementById('tugasHariTanggal').value;
+          replacements.TEMPAT_PENUGASAN = document.getElementById('tugasTempat').value;
         } else if (type === 'SPPD') {
           templateDocId = appData.settings['TEMPLATE_ID_SPPD'];
           let sppdList = [];
