@@ -1971,6 +1971,9 @@ button{letter-spacing:.01em}
           ? formatDateIndonesian(rawDateDiterima) 
           : formattedDateSurat;
 
+        // Mengambil nilai input Pengirim/Tujuan
+        const pengirimAtauTujuanVal = document.getElementById('upPengirim').value;
+
         // Cek & Update Counter Bersama jika Surat Keluar
         let manualCounterNum = null;
         if (category === 'SURAT_KELUAR') {
@@ -1993,7 +1996,12 @@ button{letter-spacing:.01em}
                   tanggalDiterima: formattedDateDiterima,
                   tanggalKeluar: formattedDateSurat,
                   tanggalSK: formattedDateSurat,
-                  pengirim: document.getElementById('upPengirim').value,
+                  
+                  // DUKUNGAN SEMUA KEMUNGKINAN NAMA VARIABLE BACKEND:
+                  pengirim: pengirimAtauTujuanVal,
+                  tujuan: pengirimAtauTujuanVal,
+                  tujuanPenerima: pengirimAtauTujuanVal,
+                  
                   judulSurat: document.getElementById('upJudulSurat').value,
                   fileBase64: base64,
                   fileName: fileName,
