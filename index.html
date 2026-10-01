@@ -281,7 +281,7 @@ thead.bg-slate-900{
 }
 
 /* Modal */
-#modalUpload > div{
+#modalUpload > div, #modalUploadLampiranOnly > div{
  border-radius:24px!important;
  box-shadow:0 25px 60px rgba(15,23,42,.18)!important;
 }
@@ -1009,7 +1009,7 @@ button{letter-spacing:.01em}
         </footer>
     </div>
 
-    <!-- MODAL UPLOAD MANUAL SURAT -->
+    <!-- MODAL UPLOAD MANUAL SURAT (PEMBUATAN DATA SURAT BARU) -->
     <div id="modalUpload" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl border border-slate-100 max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -1043,15 +1043,52 @@ button{letter-spacing:.01em}
                     <input type="text" id="upJudulSurat" required class="w-full p-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Berkas File (PDF / Image) *</label>
-                    <input type="file" id="upFile" required accept="application/pdf,image/*" class="w-full text-xs text-slate-600 font-bold file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border file:border-blue-600 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-800 hover:file:bg-blue-100">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Berkas File (PDF / Image) <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                    <!-- File Lampiran opsional saat input data surat awal -->
+                    <input type="file" id="upFile" accept="application/pdf,image/*" class="w-full text-xs text-slate-600 font-bold file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border file:border-blue-600 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-800 hover:file:bg-blue-100">
                 </div>
 
                 <div class="pt-3 flex justify-end space-x-2 border-t border-slate-100">
                     <button type="button" onclick="closeModalUpload()" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50">Batal</button>
                     <button type="submit" id="btnUploadSubmit" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md hover:bg-blue-700 flex items-center space-x-2">
                         <i id="btnUploadIcon" data-lucide="upload-cloud" class="w-4 h-4"></i>
-                        <span id="btnUploadText">Upload & Simpan</span>
+                        <span id="btnUploadText">Simpan Data Surat</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL KHUSUS UPLOAD/UPDATE FILE LAMPIRAN SURAT YANG SUDAH TERSIMPAN -->
+    <div id="modalUploadLampiranOnly" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-100 max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="font-extrabold text-slate-900 text-sm">Upload File Lampiran Surat</h3>
+                <button onclick="closeModalUploadLampiran()" class="text-slate-400 hover:text-slate-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="uploadLampiranForm" onsubmit="handleAttachFileSubmit(event)" class="space-y-3">
+                <input type="hidden" id="attachRecordCategory">
+                <input type="hidden" id="attachRecordId">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Nomor Surat</label>
+                    <input type="text" id="attachDisplayNomor" readonly class="w-full p-2 rounded-xl border border-slate-200 bg-slate-100 text-xs font-mono font-bold text-slate-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Judul / Perihal</label>
+                    <input type="text" id="attachDisplayJudul" readonly class="w-full p-2 rounded-xl border border-slate-200 bg-slate-100 text-xs font-bold text-slate-700">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Berkas Lampiran (PDF / Image) *</label>
+                    <input type="file" id="attachFileInput" required accept="application/pdf,image/*" class="w-full text-xs text-slate-600 font-bold file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border file:border-blue-600 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-800 hover:file:bg-blue-100">
+                </div>
+
+                <div class="pt-3 flex justify-end space-x-2 border-t border-slate-100">
+                    <button type="button" onclick="closeModalUploadLampiran()" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50">Batal</button>
+                    <button type="submit" id="btnAttachSubmit" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md hover:bg-blue-700 flex items-center space-x-2">
+                        <i id="btnAttachIcon" data-lucide="upload-cloud" class="w-4 h-4"></i>
+                        <span id="btnAttachText">Upload File Lampiran</span>
                     </button>
                 </div>
             </form>
@@ -1089,6 +1126,25 @@ button{letter-spacing:.01em}
         const monthName = MONTH_NAMES_ID[dateObj.getMonth()];
         const year = dateObj.getFullYear();
         return `${day} ${monthName} ${year}`;
+      }
+
+      // PERBAIKAN PENTING: Fungsi Validasi URL/Link File Lampiran Valid
+      function hasValidFileLink(link) {
+        if (!link) return false;
+        const str = String(link).trim();
+        if (str === '' || str === '-' || str === 'null' || str === 'undefined') return false;
+        return str.startsWith('http://') || str.startsWith('https://') || str.length > 10;
+      }
+
+      // Ekstraksi Angka Counter Utama dari String Nomor Surat
+      function parseCounterFromNomor(nomorSurat) {
+        if (!nomorSurat) return null;
+        let str = String(nomorSurat).trim();
+        let match = str.match(/(?:[A-Za-z]+[-/])?(\d+)/);
+        if (match && match[1]) {
+          return parseInt(match[1], 10);
+        }
+        return null;
       }
 
       async function fetchWithTimeout(resource, options = {}) {
@@ -1421,6 +1477,7 @@ button{letter-spacing:.01em}
         }
       }
 
+      // PERBAIKAN: Rendering Berkas Lampiran Surat Masuk
       function renderTableSuratMasuk(data) {
         const tbody = document.getElementById('tableSuratMasuk');
         if (!data.length) {
@@ -1429,15 +1486,36 @@ button{letter-spacing:.01em}
         }
         tbody.innerHTML = data.map(item => {
           const formattedDate = formatDateIndonesian(item['Tanggal Diterima'] || item['Tanggal Surat'] || item['Tanggal']);
+          const fileUrl = item['Link Drive'] || item['Link File'] || item['File'] || '';
+
+          let fileColHtml = '';
+          if (hasValidFileLink(fileUrl)) {
+            fileColHtml = `
+              <div class="flex items-center space-x-2">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-extrabold rounded bg-emerald-100 text-emerald-800 border border-emerald-200">Tersedia</span>
+                <a href="${fileUrl}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-bold inline-flex items-center space-x-1">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i><span>Lihat</span>
+                </a>
+              </div>`;
+          } else {
+            const escNomor = (item['Nomor Surat'] || '-').replace(/'/g, "\\'");
+            const escJudul = (item['Judul/Perihal'] || item['Perihal'] || '-').replace(/'/g, "\\'");
+            fileColHtml = `
+              <div class="flex items-center space-x-2">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-extrabold rounded bg-slate-200 text-slate-600">Belum Ada File</span>
+                <button onclick="openModalUploadLampiran('SURAT_MASUK', '${item.ID}', '${escNomor}', '${escJudul}')" class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-bold inline-flex items-center space-x-1 transition-all">
+                  <i data-lucide="upload" class="w-3 h-3"></i><span>Upload File</span>
+                </button>
+              </div>`;
+          }
+
           return `
             <tr class="hover:bg-blue-50/30 transition-colors">
               <td class="p-3.5 border-b border-slate-100 font-bold col-tgl">${formattedDate}</td>
               <td class="p-3.5 border-b border-slate-100 font-mono font-bold text-blue-700 col-nomor">${item['Nomor Surat'] || '-'}</td>
               <td class="p-3.5 border-b border-slate-100 font-bold text-slate-800 col-pengirim">${item['Pengirim'] || '-'}</td>
               <td class="p-3.5 border-b border-slate-100 font-semibold text-slate-900 col-judul">${item['Judul/Perihal'] || item['Perihal'] || '-'}</td>
-              <td class="p-3.5 border-b border-slate-100">
-                ${item['Link Drive'] ? `<a href="${item['Link Drive']}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-bold inline-flex items-center space-x-1"><i data-lucide="external-link" class="w-3.5 h-3.5"></i><span>Buka File</span></a>` : '-'}
-              </td>
+              <td class="p-3.5 border-b border-slate-100">${fileColHtml}</td>
               <td class="p-3.5 border-b border-slate-100 text-center">
                 ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_MASUK', '${item.ID}', this)" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
               </td>
@@ -1447,6 +1525,7 @@ button{letter-spacing:.01em}
         lucide.createIcons();
       }
 
+      // PERBAIKAN: Rendering Berkas Lampiran Surat Keluar
       function renderTableSuratKeluar(data) {
         const tbody = document.getElementById('tableSuratKeluar');
         if (!data.length) {
@@ -1455,15 +1534,36 @@ button{letter-spacing:.01em}
         }
         tbody.innerHTML = data.map(item => {
           const formattedDate = formatDateIndonesian(item['Tanggal Keluar'] || item['Tanggal Surat'] || item['Tanggal']);
+          const fileUrl = item['Link Drive'] || item['Link File'] || item['File'] || '';
+
+          let fileColHtml = '';
+          if (hasValidFileLink(fileUrl)) {
+            fileColHtml = `
+              <div class="flex items-center space-x-2">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-extrabold rounded bg-emerald-100 text-emerald-800 border border-emerald-200">Tersedia</span>
+                <a href="${fileUrl}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-bold inline-flex items-center space-x-1">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>PDF Drive</span>
+                </a>
+              </div>`;
+          } else {
+            const escNomor = (item['Nomor Surat'] || '-').replace(/'/g, "\\'");
+            const escJudul = (item['Judul/Perihal'] || item['Perihal'] || '-').replace(/'/g, "\\'");
+            fileColHtml = `
+              <div class="flex items-center space-x-2">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-extrabold rounded bg-slate-200 text-slate-600">Belum Ada File</span>
+                <button onclick="openModalUploadLampiran('SURAT_KELUAR', '${item.ID}', '${escNomor}', '${escJudul}')" class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-bold inline-flex items-center space-x-1 transition-all">
+                  <i data-lucide="upload" class="w-3 h-3"></i><span>Upload File</span>
+                </button>
+              </div>`;
+          }
+
           return `
             <tr class="hover:bg-blue-50/30 transition-colors">
               <td class="p-3.5 border-b border-slate-100 font-bold col-tgl">${formattedDate}</td>
               <td class="p-3.5 border-b border-slate-100 font-mono font-bold text-indigo-700 col-nomor">${item['Nomor Surat'] || '-'}</td>
               <td class="p-3.5 border-b border-slate-100 font-bold text-slate-800 col-tujuan">${item['Tujuan/Penerima'] || item['Tujuan'] || '-'}</td>
               <td class="p-3.5 border-b border-slate-100 font-semibold text-slate-900 col-judul">${item['Judul/Perihal'] || item['Perihal'] || '-'}</td>
-              <td class="p-3.5 border-b border-slate-100">
-                ${item['Link Drive'] ? `<a href="${item['Link Drive']}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-bold inline-flex items-center space-x-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>PDF Drive</span></a>` : '-'}
-              </td>
+              <td class="p-3.5 border-b border-slate-100">${fileColHtml}</td>
               <td class="p-3.5 border-b border-slate-100 text-center">
                 ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_KELUAR', '${item.ID}', this)" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
               </td>
@@ -1473,6 +1573,7 @@ button{letter-spacing:.01em}
         lucide.createIcons();
       }
 
+      // PERBAIKAN: Rendering Berkas Lampiran Surat SK
       function renderTableSuratSK(data) {
         const tbody = document.getElementById('tableSuratSK');
         if (!data.length) {
@@ -1481,14 +1582,35 @@ button{letter-spacing:.01em}
         }
         tbody.innerHTML = data.map(item => {
           const formattedDate = formatDateIndonesian(item['Tanggal SK'] || item['Tanggal Keluar'] || item['Tanggal Surat'] || item['Tanggal']);
+          const fileUrl = item['Link Drive'] || item['Link File'] || item['File'] || '';
+
+          let fileColHtml = '';
+          if (hasValidFileLink(fileUrl)) {
+            fileColHtml = `
+              <div class="flex items-center space-x-2">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-extrabold rounded bg-emerald-100 text-emerald-800 border border-emerald-200">Tersedia</span>
+                <a href="${fileUrl}" target="_blank" class="text-amber-600 hover:text-amber-800 underline font-bold inline-flex items-center space-x-1">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>PDF SK</span>
+                </a>
+              </div>`;
+          } else {
+            const escNomor = (item['Nomor Surat'] || item['Nomor SK'] || '-').replace(/'/g, "\\'");
+            const escJudul = (item['Judul/Perihal'] || item['Perihal'] || item['Tentang'] || '-').replace(/'/g, "\\'");
+            fileColHtml = `
+              <div class="flex items-center space-x-2">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-extrabold rounded bg-slate-200 text-slate-600">Belum Ada File</span>
+                <button onclick="openModalUploadLampiran('SURAT_SK', '${item.ID}', '${escNomor}', '${escJudul}')" class="px-2 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded text-[10px] font-bold inline-flex items-center space-x-1 transition-all">
+                  <i data-lucide="upload" class="w-3 h-3"></i><span>Upload File</span>
+                </button>
+              </div>`;
+          }
+
           return `
             <tr class="hover:bg-blue-50/30 transition-colors">
               <td class="p-3.5 border-b border-slate-100 font-bold col-tgl">${formattedDate}</td>
               <td class="p-3.5 border-b border-slate-100 font-mono font-bold text-amber-700 col-nomor">${item['Nomor Surat'] || item['Nomor SK'] || '-'}</td>
               <td class="p-3.5 border-b border-slate-100 font-semibold text-slate-900 col-judul">${item['Judul/Perihal'] || item['Perihal'] || item['Tentang'] || '-'}</td>
-              <td class="p-3.5 border-b border-slate-100">
-                ${item['Link Drive'] ? `<a href="${item['Link Drive']}" target="_blank" class="text-amber-600 hover:text-amber-800 underline font-bold inline-flex items-center space-x-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>PDF SK</span></a>` : '-'}
-              </td>
+              <td class="p-3.5 border-b border-slate-100">${fileColHtml}</td>
               <td class="p-3.5 border-b border-slate-100 text-center">
                 ${currentUser && currentUser.role === 'Admin' ? `<button onclick="deleteRecord('SURAT_SK', '${item.ID}', this)" class="text-rose-600 hover:text-rose-800 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '-'}
               </td>
@@ -1819,12 +1941,27 @@ button{letter-spacing:.01em}
         document.getElementById('modalUpload').classList.add('hidden');
       }
 
+      // Modal khusus upload file lampiran tambahan untuk surat yang tersimpan tanpa file
+      function openModalUploadLampiran(category, id, nomorSurat, judulSurat) {
+        document.getElementById('attachRecordCategory').value = category;
+        document.getElementById('attachRecordId').value = id;
+        document.getElementById('attachDisplayNomor').value = nomorSurat;
+        document.getElementById('attachDisplayJudul').value = judulSurat;
+        document.getElementById('attachFileInput').value = '';
+        document.getElementById('modalUploadLampiranOnly').classList.remove('hidden');
+      }
+
+      function closeModalUploadLampiran() {
+        document.getElementById('modalUploadLampiranOnly').classList.add('hidden');
+      }
+
+      // Process Submit Upload Manual Surat / Input Data Baru (Opsional File & Counter Sync)
       async function handleManualUploadSubmit(e) {
         e.preventDefault();
         const fileInput = document.getElementById('upFile').files[0];
-        if (!fileInput) return;
 
         const category = document.getElementById('uploadCategory').value;
+        const nomorSurat = document.getElementById('upNomorSurat').value;
         const rawDateSurat = document.getElementById('upTanggalSurat').value;
         const formattedDateSurat = formatDateIndonesian(rawDateSurat);
 
@@ -1834,8 +1971,90 @@ button{letter-spacing:.01em}
           ? formatDateIndonesian(rawDateDiterima) 
           : formattedDateSurat;
 
-        setButtonLoading('btnUploadSubmit', true, 'Mengunggah...', 'Upload & Simpan', 'upload-cloud');
-        showLoading('Mengunggah berkas ke Google Drive & Menyimpan ke Spreadsheet...');
+        // Cek & Update Counter Bersama jika Surat Keluar
+        let manualCounterNum = null;
+        if (category === 'SURAT_KELUAR') {
+          manualCounterNum = parseCounterFromNomor(nomorSurat);
+        }
+
+        const executeUpload = async (base64 = '', fileName = '', mimeType = '') => {
+          setButtonLoading('btnUploadSubmit', true, 'Menyimpan...', 'Simpan Data Surat', 'upload-cloud');
+          showLoading('Menyimpan data surat ke Spreadsheet...');
+
+          try {
+            const res = await fetchWithTimeout(GAS_WEB_APP_URL, {
+              method: 'POST',
+              body: JSON.stringify({
+                action: 'uploadManual',
+                payload: {
+                  category: category,
+                  nomorSurat: nomorSurat,
+                  tanggalSurat: formattedDateSurat,
+                  tanggalDiterima: formattedDateDiterima,
+                  tanggalKeluar: formattedDateSurat,
+                  tanggalSK: formattedDateSurat,
+                  pengirim: document.getElementById('upPengirim').value,
+                  judulSurat: document.getElementById('upJudulSurat').value,
+                  fileBase64: base64,
+                  fileName: fileName,
+                  mimeType: mimeType,
+                  operator: currentUser.nama,
+                  manualCounterNum: manualCounterNum // Mengirimkan counter manual ke backend
+                }
+              })
+            });
+            const result = await res.json();
+            hideLoading();
+            setButtonLoading('btnUploadSubmit', false, '', 'Simpan Data Surat', 'upload-cloud');
+
+            if (result.status === 'success') {
+              showToast('Data surat berhasil disimpan!');
+              
+              // Perbarui counter lokal jika nomor manual lebih besar
+              if (manualCounterNum && manualCounterNum > appData.stats.counterSuratKeluar) {
+                appData.stats.counterSuratKeluar = manualCounterNum;
+                document.getElementById('statCounterKeluar').innerText = manualCounterNum;
+                document.getElementById('setCounterKeluar').value = manualCounterNum;
+                document.getElementById('genCustomCounter').value = manualCounterNum + 1;
+                updateNumberPreview();
+              }
+
+              closeModalUpload();
+              document.getElementById('uploadManualForm').reset();
+              syncSpreadsheetData();
+            } else {
+              showToast(result.message || 'Gagal menyimpan data surat!', 'error');
+            }
+          } catch (err) {
+            hideLoading();
+            setButtonLoading('btnUploadSubmit', false, '', 'Simpan Data Surat', 'upload-cloud');
+            showToast('Gagal terhubung ke server backend!', 'error');
+          }
+        };
+
+        if (fileInput) {
+          const reader = new FileReader();
+          reader.onload = function() {
+            const base64 = reader.result.split(',')[1];
+            executeUpload(base64, fileInput.name, fileInput.type);
+          };
+          reader.readAsDataURL(fileInput);
+        } else {
+          executeUpload('', '', '');
+        }
+      }
+
+      // Submit Upload File Lampiran pada Record Surat yang Sudah Tersimpan
+      async function handleAttachFileSubmit(e) {
+        e.preventDefault();
+        const fileInput = document.getElementById('attachFileInput').files[0];
+        if (!fileInput) return;
+
+        const category = document.getElementById('attachRecordCategory').value;
+        const recordId = document.getElementById('attachRecordId').value;
+
+        setButtonLoading('btnAttachSubmit', true, 'Mengunggah...', 'Upload File Lampiran', 'upload-cloud');
+        showLoading('Mengunggah berkas lampiran & mengupdate data...');
 
         const reader = new FileReader();
         reader.onload = async function() {
@@ -1845,16 +2064,10 @@ button{letter-spacing:.01em}
             const res = await fetchWithTimeout(GAS_WEB_APP_URL, {
               method: 'POST',
               body: JSON.stringify({
-                action: 'uploadManual',
+                action: 'attachFileToExistingRecord',
                 payload: {
                   category: category,
-                  nomorSurat: document.getElementById('upNomorSurat').value,
-                  tanggalSurat: formattedDateSurat,
-                  tanggalDiterima: formattedDateDiterima,
-                  tanggalKeluar: formattedDateSurat,
-                  tanggalSK: formattedDateSurat,
-                  pengirim: document.getElementById('upPengirim').value,
-                  judulSurat: document.getElementById('upJudulSurat').value,
+                  id: recordId,
                   fileBase64: base64,
                   fileName: fileInput.name,
                   mimeType: fileInput.type,
@@ -1864,19 +2077,18 @@ button{letter-spacing:.01em}
             });
             const result = await res.json();
             hideLoading();
-            setButtonLoading('btnUploadSubmit', false, '', 'Upload & Simpan', 'upload-cloud');
+            setButtonLoading('btnAttachSubmit', false, '', 'Upload File Lampiran', 'upload-cloud');
 
             if (result.status === 'success') {
-              showToast('Berkas berhasil diupload ke Drive & disinkronkan!');
-              closeModalUpload();
-              document.getElementById('uploadManualForm').reset();
+              showToast('File lampiran berhasil diunggah dan ditautkan ke surat!');
+              closeModalUploadLampiran();
               syncSpreadsheetData();
             } else {
-              showToast(result.message || 'Gagal upload file!', 'error');
+              showToast(result.message || 'Gagal mengunggah file lampiran!', 'error');
             }
           } catch (err) {
             hideLoading();
-            setButtonLoading('btnUploadSubmit', false, '', 'Upload & Simpan', 'upload-cloud');
+            setButtonLoading('btnAttachSubmit', false, '', 'Upload File Lampiran', 'upload-cloud');
             showToast('Gagal terhubung ke server backend!', 'error');
           }
         };
