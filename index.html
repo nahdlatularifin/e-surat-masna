@@ -623,7 +623,7 @@ button{letter-spacing:.01em}
                             </button>
                             <button onclick="openCreateLetterChoice()" class="px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-extrabold flex items-center justify-center space-x-2 shadow-lg shadow-blue-600/30 transition-all">
                                 <i data-lucide="file-plus" class="w-4 h-4"></i>
-                                <span>Buat Nomor Surat</span>
+                                <span>Proses Nomor Surat</span>
                             </button>
                         </div>
                     </div>
@@ -1336,6 +1336,21 @@ button{letter-spacing:.01em}
 
       let syncInProgress = false;
 
+      // State nomor surat aktif (tersimpan agar tidak hilang saat pindah menu/refresh)
+      let lastGeneratedNumber = localStorage.getItem("lastGeneratedNumber") || "";
+
+      function saveActivityLog(action, detail) {
+        const logs = JSON.parse(localStorage.getItem("persuratan_activity_logs") || "[]");
+        logs.unshift({
+          waktu: new Date().toLocaleString("id-ID"),
+          user: currentUser ? currentUser.nama : "-",
+          action,
+          detail
+        });
+        localStorage.setItem("persuratan_activity_logs", JSON.stringify(logs.slice(0,100)));
+      }
+
+
       async function syncSpreadsheetData() {
         if (syncInProgress) return;
         syncInProgress = true;
@@ -1765,6 +1780,9 @@ button{letter-spacing:.01em}
         const formatted = `${status}-${counter}/Mas.13.32.0569.${kodeJabatan}/${jenisSurat}/${month}/${year}`;
         document.getElementById('previewNumberResult').innerText = formatted;
         document.getElementById('genAutoNomorSurat').value = formatted;
+        lastGeneratedNumber = formatted;
+        localStorage.setItem("lastGeneratedNumber", formatted);
+        saveActivityLog("Membuat nomor surat", formatted);
       }
 
       function copyGeneratedNumber() {
@@ -1796,21 +1814,21 @@ button{letter-spacing:.01em}
         openModalUpload('SURAT_KELUAR');
 
         // Isi otomatis nomor surat dari generator dashboard ke form upload manual
-        const generatedNumber = document.getElementById('previewNumberResult')?.innerText;
+        const generatedNumber = lastGeneratedNumber || localStorage.getItem("lastGeneratedNumber") || document.getElementById('previewNumberResult')?.innerText;
         if (generatedNumber && generatedNumber !== '-') {
           setTimeout(() => {
             const manualNumberInput = document.getElementById('upNomorSurat');
-            if (manualNumberInput) {
-              manualNumberInput.value = generatedNumber;
-            }
+            if (manualNumberInput) manualNumberInput.value = generatedNumber;
           }, 100);
         }
+        saveActivityLog("Membuka upload manual surat keluar", generatedNumber || "Tanpa nomor");
       }
 
       function useNumberAndCreateDoc() {
         updateNumberPreview();
         switchTab('generator');
         showToast('Nomor surat disiapkan. Silakan lengkapi formulir dokumen!');
+        saveActivityLog('Membuka generator surat', lastGeneratedNumber);
       }
 
       function selectDocType(type) {
@@ -2031,6 +2049,13 @@ button{letter-spacing:.01em}
 
         const category = document.getElementById('uploadCategory').value;
         const nomorSurat = document.getElementById('upNomorSurat').value;
+        if (category === 'SURAT_KELUAR' && appData.suratKeluar && appData.suratKeluar.some(x => (x['Nomor Surat'] || '') === nomorSurat)) {
+          showToast('Nomor surat sudah digunakan. Silakan buat nomor baru!', 'error');
+          return;
+        }
+
+        saveActivityLog('Upload manual surat', nomorSurat);
+
         const rawDateSurat = document.getElementById('upTanggalSurat').value;
         const formattedDateSurat = formatDateIndonesian(rawDateSurat);
 
