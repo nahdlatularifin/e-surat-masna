@@ -353,6 +353,28 @@ button{letter-spacing:.01em}
 #loginView .text-blue-600{color:#0f766e!important}
 #appView button,#appView input,#appView select,#appView textarea{transition:background-color .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}
 </style>
+<style id="number-responsive-fix">
+/* Responsive nomor surat panjang */
+.col-nomor, #previewNumberResult, #statCounterKeluar, #statCounterSK{
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  white-space:normal!important;
+}
+@media (max-width:640px){
+  #previewNumberResult{
+    font-size:0.75rem!important;
+    line-height:1.35!important;
+  }
+  #statCounterKeluar,#statCounterSK{
+    font-size:1rem!important;
+    line-height:1.4!important;
+  }
+  table .col-nomor{
+    max-width:130px!important;
+    font-size:10px!important;
+  }
+}
+</style>
 </head>
 <body class="h-full font-sans text-slate-800 bg-slate-50 antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen">
 
@@ -599,7 +621,7 @@ button{letter-spacing:.01em}
                                 <i data-lucide="copy" class="w-4 h-4 text-blue-400"></i>
                                 <span>Salin Nomor</span>
                             </button>
-                            <button onclick="useNumberAndCreateDoc()" class="px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-extrabold flex items-center justify-center space-x-2 shadow-lg shadow-blue-600/30 transition-all">
+                            <button onclick="openCreateLetterChoice()" class="px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-extrabold flex items-center justify-center space-x-2 shadow-lg shadow-blue-600/30 transition-all">
                                 <i data-lucide="file-plus" class="w-4 h-4"></i>
                                 <span>Buat Nomor Surat</span>
                             </button>
@@ -1009,7 +1031,25 @@ button{letter-spacing:.01em}
         </footer>
     </div>
 
-    <!-- MODAL UPLOAD MANUAL SURAT (PEMBUATAN DATA SURAT BARU) -->
+    <!-- MODAL PILIHAN PEMBUATAN SURAT -->
+<div id="modalCreateLetterChoice" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl border border-slate-100 max-w-sm w-full p-6 space-y-4 shadow-2xl">
+    <div class="text-center">
+      <h3 class="font-extrabold text-slate-900 text-base">Buat Surat</h3>
+      <p class="text-xs text-slate-500 mt-1">Pilih metode pembuatan surat</p>
+    </div>
+    <button onclick="chooseAutoLetter()" class="w-full px-4 py-3 rounded-xl bg-blue-600 text-white text-xs font-bold flex items-center justify-center gap-2">
+      <i data-lucide="file-plus" class="w-4 h-4"></i>
+      Buat Surat Otomatis
+    </button>
+    <button onclick="chooseManualLetter()" class="w-full px-4 py-3 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold flex items-center justify-center gap-2">
+      <i data-lucide="upload" class="w-4 h-4"></i>
+      Upload Surat Manual
+    </button>
+  </div>
+</div>
+
+<!-- MODAL UPLOAD MANUAL SURAT (PEMBUATAN DATA SURAT BARU) -->
     <div id="modalUpload" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl border border-slate-100 max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -1736,6 +1776,24 @@ button{letter-spacing:.01em}
         }).catch(() => {
           showToast('Gagal menyalin nomor!', 'error');
         });
+      }
+
+      function openCreateLetterChoice() {
+        document.getElementById('modalCreateLetterChoice').classList.remove('hidden');
+      }
+
+      function closeCreateLetterChoice() {
+        document.getElementById('modalCreateLetterChoice').classList.add('hidden');
+      }
+
+      function chooseAutoLetter() {
+        closeCreateLetterChoice();
+        useNumberAndCreateDoc();
+      }
+
+      function chooseManualLetter() {
+        closeCreateLetterChoice();
+        openModalUpload('SURAT_KELUAR');
       }
 
       function useNumberAndCreateDoc() {
