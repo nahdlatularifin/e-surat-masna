@@ -1794,6 +1794,17 @@ button{letter-spacing:.01em}
       function chooseManualLetter() {
         closeCreateLetterChoice();
         openModalUpload('SURAT_KELUAR');
+
+        // Isi otomatis nomor surat dari generator dashboard ke form upload manual
+        const generatedNumber = document.getElementById('previewNumberResult')?.innerText;
+        if (generatedNumber && generatedNumber !== '-') {
+          setTimeout(() => {
+            const manualNumberInput = document.getElementById('upNomorSurat');
+            if (manualNumberInput) {
+              manualNumberInput.value = generatedNumber;
+            }
+          }, 100);
+        }
       }
 
       function useNumberAndCreateDoc() {
